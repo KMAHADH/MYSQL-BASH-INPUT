@@ -1,7 +1,6 @@
 #!/bin/bash
 
 
-
 echo "Input USERNAME..."
 read USERNAME
 echo  ""
@@ -31,12 +30,18 @@ NUMB=`echo ${#arr[@]}`
 for i in "${arr[@]}"
 do
 echo "Input "$i"..."
-read $i
+
+
+read -a "$i" 
+
+
 echo  ""
 done
 
-mysql --user=$USERNAME --password=$PASSWORD $DATABASE << EOF
+##mysql --user=$USERNAME --password=$PASSWORD $DATABASE << EOF
 
-INSERT INTO $TABLE (`echo "@FIELDS2"`) VALUES (`echo "$FIELDS"`);
+##INSERT INTO $TABLE (`echo "$FIELDS2"`) VALUES (`echo "$FIELDS"`);
 
-EOF
+mysql $DATABASE -u $USERNAME -p$PASSWORD -se "INSERT INTO $TABLE (`echo ${arr[@]} | sed 's/\>/,/g;s/,$//'`) VALUES (`echo ${i[@]} | sed 's/\>/,/g;s/,$//'`)"
+
+
